@@ -23,7 +23,6 @@ app.use(bodyParser.json());
 
 app.use(require('method-override')());
 app.use(express.static(__dirname + '/public'));
-
 app.use(session({ secret: 'kitchen', cookie: { maxAge: 60000 }, resave: false, saveUninitialized: false  }));
 
 if (!isProduction) {
@@ -33,7 +32,7 @@ if (!isProduction) {
 if(isProduction){
   mongoose.connect(process.env.MONGODB_URI);
 } else {
-  mongoose.connect('mongodb://mongo/kitchen');
+  mongoose.connect('mongodb://kogda-virastu-mongodb:27017/kitchen');
   mongoose.set('debug', true);
 }
 

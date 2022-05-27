@@ -6,6 +6,10 @@ services:
     restart: always
     ports:
       - "3000:3000"
+    environment:
+      - MONGODB_URI=mongodb://kogda-virastu-mongodb:27017/kitchen
+      - SECRET="${SECRET}"
+      - NODE_ENV=production
     depends_on:
       - backend-mongodb
   backend-mongodb:
