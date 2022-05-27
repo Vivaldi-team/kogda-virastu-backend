@@ -23,14 +23,14 @@ jobs:
       - name: Create env file
         run: |
           touch .env
-          echo SECRET=${{secrets.SECRET}} >> .env
+          echo SECRET=$SECRET >> .env
           echo NODE_ENV=production >> .env
-      - name: Deploy
-        run: pm2 deploy ecosystem.config.js production
+          echo MONGODB_URI=mongodb://kogda-virastu-mongodb:27017/kitchen >> .env
+          pm2 deploy ecosystem.config.js production
         env:
           SSH_USERNAME: ${{secrets.SSH_USERNAME}}
           SSH_HOST: ${{secrets.SSH_HOST}}
           REF: ${{secrets.REF}}
           REPO: ${{secrets.REPO}}
           DEST_PATH: ${{secrets.DEST_PATH}}
-          SECRET: ${{ secrets.SECRET }}
+          SECRET: ${{secrets.SECRET}}
