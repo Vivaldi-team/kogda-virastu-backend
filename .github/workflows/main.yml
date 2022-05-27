@@ -11,8 +11,8 @@ jobs:
       - name: Set up SSH
         run: |
           mkdir -p ~/.ssh/
-          echo "$SSH_PRIVATE_KEY" > ./deploy.key
-          sudo chmod 600 ./deploy.key
+          echo "$SSH_PRIVATE_KEY" > ~/.ssh/id_rsa
+          sudo chmod 600 ~/.ssh/id_rsa
           echo "$SSH_KNOWN_HOSTS" > ~/.ssh/known_hosts
         shell: bash
         env:
@@ -20,5 +20,17 @@ jobs:
           SSH_KNOWN_HOSTS: ${{secrets.SSH_KNOWN_HOSTS}}
       - name: Install PM2
         run: npm i -g pm2
+      - name: Create env file
+        run: |
+          touch .env
+          echo SECRET=${{secrets.SECRET}} >> .env
+          echo NODE_ENV=production >> .env
       - name: Deploy
         run: pm2 deploy ecosystem.config.js production
+        env:
+          SSH_USERNAME: ${{secrets.SSH_USERNAME}}
+          SSH_HOST: ${{secrets.SSH_HOST}}
+          REF: ${{secrets.REF}}
+          REPO: ${{secrets.REPO}}
+          DEST_PATH: ${{secrets.DEST_PATH}}
+          SECRET: ${{ secrets.SECRET }}

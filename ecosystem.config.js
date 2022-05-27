@@ -1,5 +1,5 @@
 // eslint-disable-next-line
-require('dotenv-flow').load('.env.deploy');
+
 const {
   SSH_USERNAME,
   SSH_HOST,
@@ -8,15 +8,6 @@ const {
   DEST_PATH,
   SECRET
 } = process.env;
-
-console.log({
-    SSH_USERNAME,
-    SSH_HOST,
-    REF,
-    REPO,
-    DEST_PATH,
-    SECRET
-  })
 
 module.exports = {
   apps: [
@@ -32,7 +23,7 @@ module.exports = {
       ref: REF,
       repo: REPO,
       path: DEST_PATH,
-      'pre-deploy': `echo SECRET=${SECRET} > .env`,
+      'pre-deploy-local': `sh ./scripts/deployEnvs.sh ${DEST_PATH} ${SSH_USERNAME} ${SSH_HOST}`,
       'post-deploy': 'docker compose up --build -d'
     },
   },
