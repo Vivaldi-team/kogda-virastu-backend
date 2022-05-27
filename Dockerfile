@@ -1,8 +1,8 @@
-FROM node:latest
-RUN mkdir -p /usr/src/app
-WORKDIR /usr/src/app
-COPY package.json /usr/src/app/
-RUN npm install
-COPY . /usr/src/app
+FROM mhart/alpine-node:16
+WORKDIR /app
+RUN npm i -g pnpm pm2
+COPY package*.json pnpm-lock.yaml ./
+RUN pnpm install --frozen-lockfile
+COPY . .
 EXPOSE 3000
-CMD [ "npm", "start" ]
+CMD ["pm2-runtime","./ecosystem.config.js"]

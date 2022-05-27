@@ -1,15 +1,16 @@
 version: "3"
 services:
-  app:
-    image: app
+  backend-api:
+    container_name: kogda-virastu-backend
     build: .
     restart: always
     ports:
       - "3000:3000"
     depends_on:
-      - mongo
-  mongo:
-    image: mongo
+      - backend-mongodb
+  backend-mongodb:
+    image: mongo:5.0.8
+    container_name: kogda-virastu-mongodb
     volumes:
       - mongo-data:/data/db
     restart: always
