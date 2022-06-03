@@ -7,7 +7,11 @@
     "start": "node ./app.js",
     "dev": "nodemon ./app.js",
     "test": "newman run ./tests/api-tests.postman.json -e ./tests/env-api-tests.postman.json",
-    "stop": "lsof -ti :3000 | xargs kill"
+    "stop": "lsof -ti :3000 | xargs kill",
+    "docker:build": "docker-compose build",
+    "docker:start": "docker-compose up -d",
+    "docker:run": "docker-compose up -d --build",
+    "docker:stop": "docker-compose stop -f"
   },
   "license": "ISC",
   "dependencies": {
