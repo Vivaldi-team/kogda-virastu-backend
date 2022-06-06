@@ -54,11 +54,11 @@ router.post('/articles/:article/publish', asyncHandler(async (req, res, next) =>
   await setArticleState('published', req, res, next);
 }));
 
-router.post('/articles/:article/decline', auth.required, requireRole('admin'), asyncHandler(async (req, res, next) => {
+router.post('/articles/:article/decline', asyncHandler(async (req, res, next) => {
   await setArticleState('declined', req, res, next);
 }));
 
-router.post('/articles/:article/hold', auth.required, requireRole('admin'), asyncHandler(async (req, res, next) => {
+router.post('/articles/:article/hold', asyncHandler(async (req, res, next) => {
   await setArticleState('pending', req, res, next);
 }));
 
@@ -66,16 +66,16 @@ router.post('/articles/:article/comments/:comment/publish', asyncHandler(async (
   await setCommentState('published', req, res, next);
 }));
 
-router.post('/articles/:article/comments/:comment/decline', auth.required, requireRole('admin'), asyncHandler(async (req, res, next) => {
+router.post('/articles/:article/comments/:comment/decline', asyncHandler(async (req, res, next) => {
   await setCommentState('declined', req, res, next);
 }));
 
-router.post('/articles/:article/comments/:comment/hold', auth.required, requireRole('admin'), asyncHandler(async (req, res, next) => {
+router.post('/articles/:article/comments/:comment/hold', asyncHandler(async (req, res, next) => {
   await setCommentState('pending', req, res, next);
 }));
 
 // TODO: Add pagination here
-router.get('/articles/state/:value', auth.required, requireRole('admin'), asyncHandler(async (req, res, next) => {
+router.get('/articles/state/:value', asyncHandler(async (req, res, next) => {
   // TODO: Move to controller
   const { value } = req.params;
   // use toJSON hook instead
@@ -85,7 +85,7 @@ router.get('/articles/state/:value', auth.required, requireRole('admin'), asyncH
 }));
 
 // TODO: Add pagination here
-router.get('/articles/:article/comments/state/:value', auth.required, requireRole('admin'), asyncHandler(async (req, res, next) => {
+router.get('/articles/:article/comments/state/:value', asyncHandler(async (req, res, next) => {
   // TODO: Move to controller
   const { article, state } = req.params;
   const comments = await Article.query({ slug: article }).populate('comments').find({ state });
