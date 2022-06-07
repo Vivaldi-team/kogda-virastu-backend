@@ -3,10 +3,8 @@ const mongoose = require('mongoose');
 
 const Article = mongoose.model('Article');
 const Comment = mongoose.model('Comment');
-
+const User = mongoose.model('User');
 const asyncHandler = require('express-async-handler');
-const { requireRole } = require('../../middlewares');
-const auth = require('../auth');
 
 // Preload article objects on routes with ':article'
 router.param('article', (req, res, next, slug) => {
@@ -92,5 +90,21 @@ router.get('/articles/:article/comments/state/:value', asyncHandler(async (req, 
   // TODO: Pagination
   return res.send({ comments, commentsCount: comments.length });
 }));
+
+router.get('/users', asyncHandler(async (req, res, next) => {
+  // TODO: Filter fields
+  const users = await User.find({});
+  // TODO: Pagination
+  return res.send({users, usersCount: users.length});
+}))
+
+
+router.patch('/users/:username/roles', asyncHandler(async (req, res, next) => {
+  const { username } = req.params;
+  const { roles } = req.body?.user || {};
+  const users = await User.findOneAndUpdate({username}, { roles}, {runValidator: true, new: true});
+  // TODO: Pagination
+  return res.send({users, usersCount: users.length});
+}))
 
 module.exports = router;
