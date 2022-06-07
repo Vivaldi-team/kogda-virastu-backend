@@ -35,7 +35,7 @@ app.use(
 mongoose.connect(DB_URL);
 mongoose.set('debug', !isProduction);
 
-app.use(routes);
+app.use('/api', routes);
 app.use(notFoundEntrypoint);
 app.use(errorHandler);
 
