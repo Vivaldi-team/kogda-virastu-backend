@@ -6,6 +6,7 @@
   "scripts": {
     "start": "node ./app.js",
     "dev": "nodemon ./app.js",
+    "swagger:gen":"node ./swagger/generator.js",
     "create:admin": "node ./helpers/createAdmin.js",
     "test": "newman run ./tests/api-tests.postman.json -e ./tests/env-api-tests.postman.json",
     "lint": "npx eslint .",
@@ -30,7 +31,9 @@
     "morgan": "1.7.0",
     "passport": "0.3.2",
     "passport-local": "1.0.0",
-    "slug": "0.9.1"
+    "slug": "0.9.1",
+    "swagger-autogen": "^2.21.3",
+    "swagger-ui-express": "^4.4.0"
   },
   "devDependencies": {
     "eslint": "^8.17.0",
