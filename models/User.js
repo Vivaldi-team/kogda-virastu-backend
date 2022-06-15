@@ -1,6 +1,7 @@
 const mongoose = require('mongoose');
 const uniqueValidator = require('mongoose-unique-validator');
 const crypto = require('crypto');
+const { isURL, isEmail } = require('validator');
 const jwt = require('jsonwebtoken');
 const { secret } = require('../config');
 const { UserRoles } = require('./types');
@@ -26,15 +27,18 @@ const UserSchema = new mongoose.Schema(
       lowercase: true,
       unique: true,
       required: [true, "can't be blank"],
-      match: [/\S+@\S+\.\S+/, 'is invalid'],
+      validate: { validator: (v) => isEmail(v), message: 'must be valid email' },
       index: true,
     },
     bio: {
       type: String,
-      default: '',
+      default: 'Something about me',
       maxlength: [250, 'max length 250 symbols'],
     },
-    image: String,
+    image: {
+      type: String,
+      validate: { validator: (v) => isURL(v), message: 'must be valid url' },
+    },
     favorites: [
       {
         type: mongoose.Schema.Types.ObjectId,

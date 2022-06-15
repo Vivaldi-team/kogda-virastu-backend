@@ -1,7 +1,7 @@
 const passport = require('passport');
 const LocalStrategy = require('passport-local').Strategy;
 const mongoose = require('mongoose');
-const HttpResponse = require('es6-http-response');
+const { UnauthorizedError } = require('../errors');
 
 const User = mongoose.model('User');
 
@@ -11,7 +11,7 @@ passport.use(new LocalStrategy({
 }, ((email, password, done) => {
   User.findOne({ email }).then((user) => {
     if (!user || !user.validPassword(password)) {
-      return done(HttpResponse.Unauthorized('Incorrect login or password'), false);
+      return done(new UnauthorizedError('Incorrect login or password'));
     }
 
     return done(null, user);
