@@ -6,8 +6,9 @@ services:
     restart: always
     ports:
       - "3000:3000"
-    env_file:
-    - .env
+    environment:
+      - NODE_ENV=production
+      - SECRET=CHANGE_IT
     depends_on:
       - backend-mongodb
   backend-mongodb:
