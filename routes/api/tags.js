@@ -7,13 +7,18 @@ const Article = mongoose.model('Article');
 
 // Return a list of tags
 router.get('/', (req, res, next) => {
-  Article.find({ state: 'published' })
+  // #swagger.tags = ["tags"]
+  // #swagger.summary = 'Получить общий усписок тегов (устаревший метод)'
+
+  Article.find()
     .distinct('tagList')
     .then((tags) => res.json({ tags }))
     .catch(next);
 });
 
 router.get('/follow', auth.required, (req, res, next) => {
+  // #swagger.tags = ["tags"]
+  // #swagger.summary = 'Получить список тегов из подписок пользователя'
   User.findById(req.payload.id)
     .then((user) => {
       if (!user) {
@@ -24,6 +29,8 @@ router.get('/follow', auth.required, (req, res, next) => {
 });
 
 router.post('/:tag/follow', auth.required, (req, res, next) => {
+  // #swagger.tags = ["tags"]
+  // #swagger.summary = 'Подписаться на тег'
   const { tag } = req.params;
 
   User.findById(req.payload.id)
@@ -40,6 +47,8 @@ router.post('/:tag/follow', auth.required, (req, res, next) => {
 });
 
 router.delete('/:tag/follow', auth.required, (req, res, next) => {
+  // #swagger.tags = ["tags"]
+  // #swagger.summary = 'Отписаться от тега'
   const { tag } = req.params;
 
   User.findById(req.payload.id)
@@ -55,8 +64,11 @@ router.delete('/:tag/follow', auth.required, (req, res, next) => {
 });
 
 router.get('/top', async (req, res, next) => {
+  // #swagger.tags = ["tags"]
+  // #swagger.summary = 'Получить список самых популярных тегов'
   try {
     const tags = await Article.aggregate([
+      { $filter: { state: 'published' } },
       { $project: { tagList: 1 } },
       { $unwind: '$tagList' },
       { $group: { _id: '$tagList', count: { $sum: 1 } } },

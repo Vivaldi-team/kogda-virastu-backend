@@ -1,6 +1,5 @@
 const isProduction = true;
 module.exports = (err, req, res, next) => {
-  // TODO: Delete
   console.log('Got error in handler');
   console.log(err);
   const {
