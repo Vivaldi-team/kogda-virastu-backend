@@ -3,10 +3,12 @@ const mongoose = require('mongoose');
 
 const Article = mongoose.model('Article');
 const Comment = mongoose.model('Comment');
+const User = mongoose.model('User');
 
 const asyncHandler = require('express-async-handler');
 const { requireRole } = require('../../middlewares');
 const auth = require('../auth');
+const { NotFoundError } = require('../../errors');
 
 // Preload article objects on routes with ':article'
 router.param('article', (req, res, next, slug) => {
@@ -183,6 +185,60 @@ router.get('/articles/:article/comments/state/:state', auth.required, requireRol
   const comments = await Article.query({ slug: article }).populate('comments').find({ state });
   // TODO: Pagination
   return res.send({ comments, commentsCount: comments.length });
+}));
+
+router.get('/users', auth.required, requireRole('admin'), asyncHandler(async (req, res, next) => {
+  // TODO: Add pagination here
+  // #swagger.tags = ["admin"]
+  // #swagger.summary = 'Получить список пользователей'
+
+  const users = await User.find({}, {
+    username: 1, roles: 1, nickname: 1, email: 1, bio: 1, image: 1,
+  });
+  return res.json({ users, usersCount: users.length });
+}));
+
+router.get('/users/:username', auth.required, requireRole('admin'), asyncHandler(async (req, res, next) => {
+  /* #swagger.tags = ["admin"]
+     #swagger.summary = 'Получить информацию о пользователе'
+     #swagger.parameters['username'] = {
+      in: 'path',
+      type: 'string',
+      required: true,
+      description: 'имя пользователя' }
+  */
+  const { username } = req.params;
+  const user = await User.findOne({ username }, {
+    username: 1, roles: 1, nickname: 1, email: 1, bio: 1, image: 1,
+  }).orFail(new NotFoundError(`Пользователь с username ${username} не найден`));
+  return res.json({ user });
+}));
+
+router.patch('/users/:username/roles', auth.required, requireRole('admin'), asyncHandler(async (req, res, next) => {
+  /* #swagger.tags = ["admin"]
+     #swagger.summary = 'Обновить роли пользователя'
+     #swagger.parameters['username'] = {
+      in: 'path',
+      type: 'string',
+      required: true,
+      description: 'имя пользователя' }
+    #swagger.requestBody = {
+      required: true,
+      schema: {
+        type: "object",
+        properties: {
+          roles: { $ref:"#/definitions/UserRoles" },
+        }
+      }
+    }
+  */
+  const { roles } = req.body;
+  const { username } = req.params;
+  const user = await User.findOne({ username }, {
+    username: 1, roles: 1, nickname: 1, email: 1, bio: 1, image: 1,
+  }).orFail(new NotFoundError(`Пользователь с username ${username} не найден`));
+  await user.setRoles(roles);
+  return res.json({ user });
 }));
 
 module.exports = router;
