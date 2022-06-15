@@ -45,47 +45,139 @@ const setArticleState = async (state, req, res, next) => {
 };
 
 const setCommentState = async (state, req, res, next) => {
-  const { comment } = req;
-  await comment.setState(state);
-  return res.send(comment.toJSONFor());
+  let { comment } = req;
+  comment = await comment.setState(state);
+  comment = await comment.populate('author', {
+    name: 1, email: 1, bio: 1, image: 1, username: 1,
+  });
+  return res.send({ comment });
 };
 
 router.post('/articles/:article/publish', asyncHandler(async (req, res, next) => {
+  /*
+    #swagger.summary = 'Опубликовать статью'
+    #swagger.tags = ["admin"]
+    #swagger.parameters['article'] = {
+          in: 'path',
+          type: 'string',
+          required: true,
+          description: 'slug публикации' }
+  */
   await setArticleState('published', req, res, next);
 }));
 
 router.post('/articles/:article/decline', auth.required, requireRole('admin'), asyncHandler(async (req, res, next) => {
+  /*
+     #swagger.summary = 'Отклонить статью'
+     #swagger.tags = ["admin"]
+     #swagger.parameters['article'] = {
+            in: 'path',
+            type: 'string',
+            required: true,
+            description: 'slug публикации' }
+  */
   await setArticleState('declined', req, res, next);
 }));
 
 router.post('/articles/:article/hold', auth.required, requireRole('admin'), asyncHandler(async (req, res, next) => {
+  /*
+     #swagger.summary = 'Вернуть статью на модерацию'
+     #swagger.tags = ["admin"]
+     #swagger.parameters['article'] = {
+            in: 'path',
+            type: 'string',
+            required: true,
+            description: 'slug публикации' }
+  */
   await setArticleState('pending', req, res, next);
 }));
 
 router.post('/articles/:article/comments/:comment/publish', asyncHandler(async (req, res, next) => {
+  // #swagger.tags = ["admin"]
+  // #swagger.summary = 'Опубликовать комментарий'
+  /* #swagger.parameters['article'] = {
+            in: 'path',
+            type: 'string',
+            required: true,
+            description: 'slug публикации' }
+  */
+  /* #swagger.parameters['comment'] = {
+            in: 'path',
+            type: 'string',
+            required: true,
+            description: 'id комментария' }
+  */
   await setCommentState('published', req, res, next);
 }));
 
 router.post('/articles/:article/comments/:comment/decline', auth.required, requireRole('admin'), asyncHandler(async (req, res, next) => {
+  /*
+    #swagger.tags = ["admin"]
+    #swagger.summary = 'Отклонить комментарий'
+    #swagger.parameters['article'] = {
+      in: 'path',
+      type: 'string',
+      required: true,
+      description: 'slug публикации' }
+    #swagger.parameters['comment'] = {
+      in: 'path',
+      type: 'string',
+      required: true,
+      description: 'id комментария' }
+  */
   await setCommentState('declined', req, res, next);
 }));
 
 router.post('/articles/:article/comments/:comment/hold', auth.required, requireRole('admin'), asyncHandler(async (req, res, next) => {
+  /*
+    #swagger.summary = 'Отправить комментарий на модерацию'
+    #swagger.tags = ["admin"]
+    #swagger.parameters['article'] = {
+      in: 'path',
+      type: 'string',
+      required: true,
+      description: 'slug публикации' }
+    #swagger.parameters['comment'] = {
+      in: 'path',
+      type: 'string',
+      required: true,
+      description: 'id комментария' }
+  */
   await setCommentState('pending', req, res, next);
 }));
 
 // TODO: Add pagination here
-router.get('/articles/state/:value', auth.required, requireRole('admin'), asyncHandler(async (req, res, next) => {
+router.get('/articles/state/:state', auth.required, requireRole('admin'), asyncHandler(async (req, res, next) => {
+  // #swagger.tags = ["admin"]
+  // #swagger.summary = 'Получить список публикаций (с указанным состоянием)'
+  /* #swagger.parameters['state'] = {
+      in: 'path',
+      required: true,
+      schema: {
+          '$ref': '#/definitions/PublishState'
+      },
+      description: 'состояние публикации' }
+  */
   // TODO: Move to controller
-  const { value } = req.params;
+  const { state } = req.params;
   // use toJSON hook instead
-  const articles = (await Article.find({ state: value }).populate('author')).map((a) => a.toJSONFor());
+  const articles = (await Article.find({ state }).populate('author')).map((a) => a.toJSONFor());
   // TODO: Pagination
   return res.send({ articles, articlesCount: articles.length });
 }));
 
 // TODO: Add pagination here
-router.get('/articles/:article/comments/state/:value', auth.required, requireRole('admin'), asyncHandler(async (req, res, next) => {
+router.get('/articles/:article/comments/state/:state', auth.required, requireRole('admin'), asyncHandler(async (req, res, next) => {
+  // #swagger.tags = ["admin"]
+  // #swagger.summary = 'Получить список комментариев статьи (с указанным состоянием)'
+  /* #swagger.parameters['state'] = {
+            in: 'path',
+            required: true,
+            schema: {
+                '$ref': '#/definitions/PublishState'
+            },
+            description: 'состояние комментария' }
+  */
   // TODO: Move to controller
   const { article, state } = req.params;
   const comments = await Article.query({ slug: article }).populate('comments').find({ state });

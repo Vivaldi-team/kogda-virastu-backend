@@ -8,6 +8,12 @@ const User = mongoose.model('User');
 const auth = require('../auth');
 
 router.get('/user', auth.required, (req, res, next) => {
+  // #swagger.tags = ["user"]
+  // #swagger.summary = 'Получить профиль текущего пользователя'
+  /* #swagger.responses[200] = {
+            description: 'Профиль пользователя успешно получен',
+            schema: { $ref: '#/definitions/AuthorizedUserData' }
+  } */
   User.findById(req.payload.id).then((user) => {
     if (!user) { return res.sendStatus(401); }
 
@@ -16,6 +22,21 @@ router.get('/user', auth.required, (req, res, next) => {
 });
 
 router.put('/user', auth.required, (req, res, next) => {
+  // #swagger.tags = ["user"]
+  // #swagger.summary = 'Обновить профиль текущего пользователя'
+  /* #swagger.requestBody = {
+      required: true,
+      schema: {
+        type: "object",
+        properties: { user: {$ref:"#/definitions/UserData"} }
+      }
+  } */
+  /* #swagger.responses[200] = {
+    description: 'Профиль пользователя успешно получен',
+    schema: {
+        user: {$ref:"#/definitions/AuthorizedUserData"} }
+    }
+  } */
   User.findById(req.payload.id).then((user) => {
     if (!user) { return res.sendStatus(401); }
 
@@ -44,6 +65,21 @@ router.put('/user', auth.required, (req, res, next) => {
 });
 
 router.post('/users/login', (req, res, next) => {
+  // #swagger.tags = ["auth"]
+  // #swagger.summary = 'Авторизоваться (залогиниться)'
+  /* #swagger.requestBody = {
+      required: true,
+      schema: {
+        type: "object",
+        properties: { user: {$ref:"#/definitions/AuthData"} }
+      }
+  } */
+  /* #swagger.responses[200] = {
+    description: 'Профиль пользователя успешно получен',
+    schema: {
+        user: {$ref:"#/definitions/AuthorizedUserData"} }
+    }
+  } */
   if (!req.body.user.email) {
     return res.status(400).json({ errors: { email: "can't be blank" } });
   }
@@ -63,6 +99,30 @@ router.post('/users/login', (req, res, next) => {
 });
 
 router.post('/users', expressAsyncHandler(async (req, res, next) => {
+  // #swagger.tags = ["auth"]
+  // #swagger.summary = 'Зарегистрировать новового пользователя'
+  /* #swagger.requestBody = {
+      required: true,
+      schema: {
+        type: "object",
+        properties: {
+          user: {$ref:"#/definitions/UserData"},
+          invite: {$ref:"#/definitions/InviteCode"},
+        }
+      }
+  } */
+  /* #swagger.responses[200] = {
+    description: 'Профиль пользователя успешно получен',
+    schema: {
+        user: {$ref:"#/definitions/AuthorizedUserData"} }
+    }
+  } */
+  /* #swagger.responses[404] = {
+    description: 'Передан некорректный инвайт',
+    schema: {
+        user: {$ref:"#/definitions/InviteNotFoundError"} }
+    }
+  } */
   const { invite: inviteCode } = req.body;
   // TODO: Refactor, use Joi instead
   if (!req.body.invite) {
@@ -85,14 +145,30 @@ router.post('/users', expressAsyncHandler(async (req, res, next) => {
 }));
 
 router.post('/user/invites/new', auth.required, expressAsyncHandler(async (req, res, next) => {
+  // #swagger.tags = ["invites"]
+  // #swagger.summary = 'Запросить новый инвайт (код приглашения)'
+  /* #swagger.responses[200] = {
+    description: 'Профиль пользователя успешно получен',
+    schema: {
+        code: {$ref:"#/definitions/InviteCode"} }
+    }
+  } */
   const { id } = req.payload;
   const { code } = await Invite.issue(id);
   return res.json({ code });
 }));
 
 router.get('/user/invites', auth.required, expressAsyncHandler(async (req, res, next) => {
+  // #swagger.tags = ["invites"]
+  // #swagger.summary = 'Список инвайтов текущего пользователя'
+  /* #swagger.responses[200] = {
+    schema: {
+      invites: [{$ref:"#/definitions/InviteData"}],
+      invitesCount: 1
+    }
+  } */
   const { id: issuer } = req.payload;
-  const invites = await Invite.find({ issuer }, { code: 1, used: 1, createdAt: 1});
+  const invites = await Invite.find({ issuer }, { code: 1, used: 1, createdAt: 1 });
   return res.json({ invites, invitesCount: invites.length });
 }));
 
