@@ -1,11 +1,10 @@
 const mongoose = require('mongoose');
 const uniqueValidator = require('mongoose-unique-validator');
 const slug = require('slug');
+const { isURL } = require('validator');
 
 const User = mongoose.model('User');
 const { PublishState } = require('./types');
-
-const urlRegExp = /^(?:http(s)?:\/\/)?[\w.-]+(?:\.[\w.-]+)+[\w\-._~:\/?#[\]@!$&'()*+,;=.]+$/;
 
 const ArticleSchema = new mongoose.Schema({
   slug: { type: String, lowercase: true, unique: true },
@@ -14,10 +13,7 @@ const ArticleSchema = new mongoose.Schema({
   body: String,
   link: {
     type: String,
-    validate: {
-      validator: (v) => urlRegExp.test(v),
-      message: 'Поле "link" должно быть валидным url-адресом.',
-    },
+    validate: { validator: (v) => isURL(v), message: 'must be valid url' },
   },
   favoritesCount: { type: Number, default: 0 },
   comments: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Comment' }],

@@ -1,0 +1,2134 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Kogda-Virastu API ",
+    "description": "API бэкенд-сервиса проекта \"КогдаВырасту\"",
+    "version": "1.0.0"
+  },
+  "servers": [
+    {
+      "url": "https://api.kogda-virastu.com/v1"
+    },
+    {
+      "url": "http://localhost:3000/api/v1"
+    }
+  ],
+  "paths": {
+    "/user": {
+      "get": {
+        "tags": [
+          "user"
+        ],
+        "summary": "Получить профиль текущего пользователя",
+        "description": "",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Профиль пользователя успешно получен",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AuthorizedUserData"
+                }
+              },
+              "application/xml": {
+                "schema": {
+                  "$ref": "#/components/schemas/AuthorizedUserData"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "user"
+        ],
+        "summary": "Обновить профиль текущего пользователя",
+        "description": "",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Профиль пользователя успешно получен",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "user": {
+                      "$ref": "#/components/schemas/AuthorizedUserData"
+                    }
+                  },
+                  "xml": {
+                    "name": "main"
+                  }
+                }
+              },
+              "application/xml": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "user": {
+                      "$ref": "#/components/schemas/AuthorizedUserData"
+                    }
+                  },
+                  "xml": {
+                    "name": "main"
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          }
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "user": {
+                    "$ref": "#/components/schemas/UserData"
+                  }
+                }
+              }
+            },
+            "application/xml": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "user": {
+                    "$ref": "#/components/schemas/UserData"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/users/login": {
+      "post": {
+        "tags": [
+          "auth"
+        ],
+        "summary": "Авторизоваться (залогиниться)",
+        "description": "",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Профиль пользователя успешно получен",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "user": {
+                      "$ref": "#/components/schemas/AuthorizedUserData"
+                    }
+                  },
+                  "xml": {
+                    "name": "main"
+                  }
+                }
+              },
+              "application/xml": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "user": {
+                      "$ref": "#/components/schemas/AuthorizedUserData"
+                    }
+                  },
+                  "xml": {
+                    "name": "main"
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request"
+          }
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "user": {
+                    "$ref": "#/components/schemas/AuthData"
+                  }
+                }
+              }
+            },
+            "application/xml": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "user": {
+                    "$ref": "#/components/schemas/AuthData"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/users": {
+      "post": {
+        "tags": [
+          "auth"
+        ],
+        "summary": "Зарегистрировать новового пользователя",
+        "description": "",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Профиль пользователя успешно получен",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "user": {
+                      "$ref": "#/components/schemas/AuthorizedUserData"
+                    }
+                  },
+                  "xml": {
+                    "name": "main"
+                  }
+                }
+              },
+              "application/xml": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "user": {
+                      "$ref": "#/components/schemas/AuthorizedUserData"
+                    }
+                  },
+                  "xml": {
+                    "name": "main"
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "404": {
+            "description": "Передан некорректный инвайт",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "user": {
+                      "$ref": "#/components/schemas/InviteNotFoundError"
+                    }
+                  },
+                  "xml": {
+                    "name": "main"
+                  }
+                }
+              },
+              "application/xml": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "user": {
+                      "$ref": "#/components/schemas/InviteNotFoundError"
+                    }
+                  },
+                  "xml": {
+                    "name": "main"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "user": {
+                    "$ref": "#/components/schemas/UserData"
+                  },
+                  "invite": {
+                    "$ref": "#/components/schemas/InviteCode"
+                  }
+                }
+              }
+            },
+            "application/xml": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "user": {
+                    "$ref": "#/components/schemas/UserData"
+                  },
+                  "invite": {
+                    "$ref": "#/components/schemas/InviteCode"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/user/invites/new": {
+      "post": {
+        "tags": [
+          "invites"
+        ],
+        "summary": "Запросить новый инвайт (код приглашения)",
+        "description": "",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Профиль пользователя успешно получен",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "$ref": "#/components/schemas/InviteCode"
+                    }
+                  },
+                  "xml": {
+                    "name": "main"
+                  }
+                }
+              },
+              "application/xml": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "$ref": "#/components/schemas/InviteCode"
+                    }
+                  },
+                  "xml": {
+                    "name": "main"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/user/invites": {
+      "get": {
+        "tags": [
+          "invites"
+        ],
+        "summary": "Список инвайтов текущего пользователя",
+        "description": "",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "invites": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/InviteData"
+                      }
+                    },
+                    "invitesCount": {
+                      "type": "number",
+                      "example": 1
+                    }
+                  },
+                  "xml": {
+                    "name": "main"
+                  }
+                }
+              },
+              "application/xml": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "invites": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/InviteData"
+                      }
+                    },
+                    "invitesCount": {
+                      "type": "number",
+                      "example": 1
+                    }
+                  },
+                  "xml": {
+                    "name": "main"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/profiles/{username}": {
+      "get": {
+        "tags": [
+          "profiles"
+        ],
+        "summary": "Получить профиль пользователя",
+        "description": "",
+        "parameters": [
+          {
+            "name": "username",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "user": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/UserProfile"
+                      }
+                    }
+                  },
+                  "xml": {
+                    "name": "main"
+                  }
+                }
+              },
+              "application/xml": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "user": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/UserProfile"
+                      }
+                    }
+                  },
+                  "xml": {
+                    "name": "main"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/profiles/{username}/follow": {
+      "post": {
+        "tags": [
+          "profiles"
+        ],
+        "summary": "Подписаться на пользователя",
+        "description": "",
+        "parameters": [
+          {
+            "name": "username",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "user": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/UserProfile"
+                      }
+                    }
+                  },
+                  "xml": {
+                    "name": "main"
+                  }
+                }
+              },
+              "application/xml": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "user": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/UserProfile"
+                      }
+                    }
+                  },
+                  "xml": {
+                    "name": "main"
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "profiles"
+        ],
+        "summary": "Отписаться от пользователя",
+        "description": "",
+        "parameters": [
+          {
+            "name": "username",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "user": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/UserProfile"
+                      }
+                    }
+                  },
+                  "xml": {
+                    "name": "main"
+                  }
+                }
+              },
+              "application/xml": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "user": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/UserProfile"
+                      }
+                    }
+                  },
+                  "xml": {
+                    "name": "main"
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          }
+        }
+      }
+    },
+    "/articles/": {
+      "get": {
+        "tags": [
+          "article"
+        ],
+        "summary": "Получить список статей",
+        "description": "",
+        "parameters": [
+          {
+            "name": "limit",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "offset",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "tag",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "author",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "favorited",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "articles": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/ArticleData"
+                      }
+                    },
+                    "articlesCount": {
+                      "type": "number",
+                      "example": 1
+                    }
+                  },
+                  "xml": {
+                    "name": "main"
+                  }
+                }
+              },
+              "application/xml": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "articles": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/ArticleData"
+                      }
+                    },
+                    "articlesCount": {
+                      "type": "number",
+                      "example": 1
+                    }
+                  },
+                  "xml": {
+                    "name": "main"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "article"
+        ],
+        "summary": "Cоздать новую публикацию",
+        "description": "",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "article": {
+                      "$ref": "#/components/schemas/Article"
+                    }
+                  },
+                  "xml": {
+                    "name": "main"
+                  }
+                }
+              },
+              "application/xml": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "article": {
+                      "$ref": "#/components/schemas/Article"
+                    }
+                  },
+                  "xml": {
+                    "name": "main"
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          }
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "article": {
+                    "$ref": "#/components/schemas/ArticleData"
+                  }
+                }
+              }
+            },
+            "application/xml": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "article": {
+                    "$ref": "#/components/schemas/ArticleData"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/articles/feed": {
+      "get": {
+        "tags": [
+          "article"
+        ],
+        "summary": "Получить фид публикаций",
+        "description": "",
+        "parameters": [
+          {
+            "name": "limit",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "offset",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "articles": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/ArticleData"
+                      }
+                    },
+                    "articlesCount": {
+                      "type": "number",
+                      "example": 1
+                    }
+                  },
+                  "xml": {
+                    "name": "main"
+                  }
+                }
+              },
+              "application/xml": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "articles": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/ArticleData"
+                      }
+                    },
+                    "articlesCount": {
+                      "type": "number",
+                      "example": 1
+                    }
+                  },
+                  "xml": {
+                    "name": "main"
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          }
+        }
+      }
+    },
+    "/articles/top": {
+      "get": {
+        "tags": [
+          "article"
+        ],
+        "summary": "Получить список самых популярных публикаций",
+        "description": "",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "articles": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/ArticleDataPopulated"
+                      }
+                    },
+                    "articlesCount": {
+                      "type": "number",
+                      "example": 1
+                    }
+                  },
+                  "xml": {
+                    "name": "main"
+                  }
+                }
+              },
+              "application/xml": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "articles": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/ArticleDataPopulated"
+                      }
+                    },
+                    "articlesCount": {
+                      "type": "number",
+                      "example": 1
+                    }
+                  },
+                  "xml": {
+                    "name": "main"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/articles/{article}": {
+      "get": {
+        "tags": [
+          "article"
+        ],
+        "summary": "Получить публикацию с указанным Id",
+        "description": "",
+        "parameters": [
+          {
+            "name": "article",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "article": {
+                      "$ref": "#/components/schemas/Article"
+                    }
+                  },
+                  "xml": {
+                    "name": "main"
+                  }
+                }
+              },
+              "application/xml": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "article": {
+                      "$ref": "#/components/schemas/Article"
+                    }
+                  },
+                  "xml": {
+                    "name": "main"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "article"
+        ],
+        "summary": "Обновить публикацию",
+        "description": "",
+        "parameters": [
+          {
+            "name": "article",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "article": {
+                      "$ref": "#/components/schemas/Article"
+                    }
+                  },
+                  "xml": {
+                    "name": "main"
+                  }
+                }
+              },
+              "application/xml": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "article": {
+                      "$ref": "#/components/schemas/Article"
+                    }
+                  },
+                  "xml": {
+                    "name": "main"
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "article": {
+                    "$ref": "#/components/schemas/ArticleData"
+                  }
+                }
+              }
+            },
+            "application/xml": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "article": {
+                    "$ref": "#/components/schemas/ArticleData"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "article"
+        ],
+        "summary": "Удалить публикацию с указанным Id",
+        "description": "",
+        "parameters": [
+          {
+            "name": "article",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "No Content"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        }
+      }
+    },
+    "/articles/{article}/favorite": {
+      "post": {
+        "tags": [
+          "article"
+        ],
+        "summary": "Добавить публикацию в избранное",
+        "description": "",
+        "parameters": [
+          {
+            "name": "article",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "article": {
+                      "$ref": "#/components/schemas/Article"
+                    }
+                  },
+                  "xml": {
+                    "name": "main"
+                  }
+                }
+              },
+              "application/xml": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "article": {
+                      "$ref": "#/components/schemas/Article"
+                    }
+                  },
+                  "xml": {
+                    "name": "main"
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "article"
+        ],
+        "summary": "Удалить публикацию из избранного",
+        "description": "",
+        "parameters": [
+          {
+            "name": "article",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "article": {
+                      "$ref": "#/components/schemas/Article"
+                    }
+                  },
+                  "xml": {
+                    "name": "main"
+                  }
+                }
+              },
+              "application/xml": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "article": {
+                      "$ref": "#/components/schemas/Article"
+                    }
+                  },
+                  "xml": {
+                    "name": "main"
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          }
+        }
+      }
+    },
+    "/articles/{article}/comments": {
+      "get": {
+        "tags": [
+          "article"
+        ],
+        "summary": "Получить комментарии статьи",
+        "description": "",
+        "parameters": [
+          {
+            "name": "article",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "comments": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/Comment"
+                      }
+                    }
+                  },
+                  "xml": {
+                    "name": "main"
+                  }
+                }
+              },
+              "application/xml": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "comments": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/Comment"
+                      }
+                    }
+                  },
+                  "xml": {
+                    "name": "main"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "article"
+        ],
+        "summary": "Добавить новый комментарий к статье",
+        "description": "",
+        "parameters": [
+          {
+            "name": "article",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "401": {
+            "description": "Unauthorized"
+          }
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "comment": {
+                    "$ref": "#/components/schemas/Comment"
+                  }
+                }
+              }
+            },
+            "application/xml": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "comment": {
+                    "$ref": "#/components/schemas/Comment"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/articles/{article}/comments/{comment}": {
+      "delete": {
+        "tags": [
+          "article"
+        ],
+        "description": "",
+        "parameters": [
+          {
+            "name": "article",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "slug публикации"
+          },
+          {
+            "name": "comment",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "id комментария"
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "No Content"
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        }
+      }
+    },
+    "/admin/articles/{article}/publish": {
+      "post": {
+        "tags": [
+          "admin"
+        ],
+        "summary": "Опубликовать статью",
+        "description": "",
+        "parameters": [
+          {
+            "name": "article",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "slug публикации"
+          }
+        ],
+        "responses": {}
+      }
+    },
+    "/admin/articles/{article}/decline": {
+      "post": {
+        "tags": [
+          "admin"
+        ],
+        "summary": "Отклонить статью",
+        "description": "",
+        "parameters": [
+          {
+            "name": "article",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "slug публикации"
+          }
+        ],
+        "responses": {}
+      }
+    },
+    "/admin/articles/{article}/hold": {
+      "post": {
+        "tags": [
+          "admin"
+        ],
+        "summary": "Вернуть статью на модерацию",
+        "description": "",
+        "parameters": [
+          {
+            "name": "article",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "slug публикации"
+          }
+        ],
+        "responses": {}
+      }
+    },
+    "/admin/articles/{article}/comments/{comment}/publish": {
+      "post": {
+        "tags": [
+          "admin"
+        ],
+        "summary": "Опубликовать комментарий",
+        "description": "",
+        "parameters": [
+          {
+            "name": "article",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "slug публикации"
+          },
+          {
+            "name": "comment",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "id комментария"
+          }
+        ],
+        "responses": {}
+      }
+    },
+    "/admin/articles/{article}/comments/{comment}/decline": {
+      "post": {
+        "tags": [
+          "admin"
+        ],
+        "summary": "Отклонить комментарий",
+        "description": "",
+        "parameters": [
+          {
+            "name": "article",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "slug публикации"
+          },
+          {
+            "name": "comment",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "id комментария"
+          }
+        ],
+        "responses": {}
+      }
+    },
+    "/admin/articles/{article}/comments/{comment}/hold": {
+      "post": {
+        "tags": [
+          "admin"
+        ],
+        "summary": "Отправить комментарий на модерацию",
+        "description": "",
+        "parameters": [
+          {
+            "name": "article",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "slug публикации"
+          },
+          {
+            "name": "comment",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "id комментария"
+          }
+        ],
+        "responses": {}
+      }
+    },
+    "/admin/articles/state/{state}": {
+      "get": {
+        "tags": [
+          "admin"
+        ],
+        "summary": "Получить список публикаций (с указанным состоянием)",
+        "description": "",
+        "parameters": [
+          {
+            "name": "state",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "$ref": "#/components/schemas/PublishState"
+            },
+            "description": "состояние публикации"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/admin/articles/{article}/comments/state/{state}": {
+      "get": {
+        "tags": [
+          "admin"
+        ],
+        "summary": "Получить список комментариев статьи (с указанным состоянием)",
+        "description": "",
+        "parameters": [
+          {
+            "name": "article",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "state",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "$ref": "#/components/schemas/PublishState"
+            },
+            "description": "состояние комментария"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/tags/": {
+      "get": {
+        "tags": [
+          "tags"
+        ],
+        "summary": "Получить общий усписок тегов (устаревший метод)",
+        "description": "",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/tags/follow": {
+      "get": {
+        "tags": [
+          "tags"
+        ],
+        "summary": "Получить список тегов из подписок пользователя",
+        "description": "",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "401": {
+            "description": "Unauthorized"
+          }
+        }
+      }
+    },
+    "/tags/{tag}/follow": {
+      "post": {
+        "tags": [
+          "tags"
+        ],
+        "summary": "Подписаться на тег",
+        "description": "",
+        "parameters": [
+          {
+            "name": "tag",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "No Content"
+          },
+          "401": {
+            "description": "Unauthorized"
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "tags"
+        ],
+        "summary": "Отписаться от тега",
+        "description": "",
+        "parameters": [
+          {
+            "name": "tag",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "No Content"
+          },
+          "401": {
+            "description": "Unauthorized"
+          }
+        }
+      }
+    },
+    "/tags/top": {
+      "get": {
+        "tags": [
+          "tags"
+        ],
+        "summary": "Получить список самых популярных тегов",
+        "description": "",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/upload/": {
+      "post": {
+        "tags": [
+          "upload"
+        ],
+        "description": "",
+        "parameters": [
+          {
+            "name": "file",
+            "in": "formData",
+            "required": true,
+            "description": "Файл изображения",
+            "schema": {
+              "type": "file"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "url": {
+                      "type": "string",
+                      "example": "/api/v1/upload/images/1655283962721_filename.png"
+                    }
+                  },
+                  "xml": {
+                    "name": "main"
+                  }
+                }
+              },
+              "application/xml": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "url": {
+                      "type": "string",
+                      "example": "/api/v1/upload/images/1655283962721_filename.png"
+                    }
+                  },
+                  "xml": {
+                    "name": "main"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/upload/image/{filename}": {
+      "get": {
+        "tags": [
+          "upload"
+        ],
+        "description": "Получение загруженного изображения",
+        "parameters": [
+          {
+            "name": "filename",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Имя изображения"
+          }
+        ],
+        "responses": {}
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "UserData": {
+        "type": "object",
+        "properties": {
+          "username": {
+            "type": "string",
+            "example": "amazinguser"
+          },
+          "email": {
+            "type": "string",
+            "example": "some@ya.ru"
+          },
+          "password": {
+            "type": "string",
+            "example": "n0t$r0ngp@ssw0rd"
+          },
+          "nickname": {
+            "type": "string",
+            "example": "tiredcoder"
+          },
+          "bio": {
+            "type": "string",
+            "example": "Something about me"
+          },
+          "image": {
+            "type": "string",
+            "example": "http://ya.ru/avatar/1.jpg"
+          }
+        },
+        "required": [
+          "username",
+          "email",
+          "password",
+          "nickname"
+        ],
+        "xml": {
+          "name": "UserData"
+        }
+      },
+      "AuthorizedUserData": {
+        "type": "object",
+        "properties": {
+          "username": {
+            "type": "string",
+            "example": "amazinguser"
+          },
+          "email": {
+            "type": "string",
+            "example": "some@ya.ru"
+          },
+          "nickname": {
+            "type": "string",
+            "example": "tiredcoder"
+          },
+          "bio": {
+            "type": "string",
+            "example": "Something about me"
+          },
+          "image": {
+            "type": "string",
+            "example": "http://ya.ru/avatar/1.jpg"
+          },
+          "roles": {
+            "type": "array",
+            "items": {
+              "xml": {
+                "name": "userroles"
+              },
+              "$ref": "#/components/schemas/UserRoles"
+            }
+          },
+          "token": {
+            "type": "string",
+            "example": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYyYTdhZDNiMjkwMTMzNjYyYmU5N2JhZiIsInVzZXJuYW1lIjoidXMzM2VyNTQ2NTQ1NDQ1NDMzZXJuMmFtZSIsImV4cCI6MTY2MDM0NDIwMiwiaWF0IjoxNjU1MTYwMjAyfQ.tSqy-nPsXite2N7_qgfHfnFGwRjQvAAnhDso9sKb0xY"
+          }
+        },
+        "xml": {
+          "name": "AuthorizedUserData"
+        }
+      },
+      "AuthData": {
+        "type": "object",
+        "properties": {
+          "email": {
+            "type": "string",
+            "example": "some@ya.ru"
+          },
+          "password": {
+            "type": "string",
+            "example": "n0t$r0ngp@ssw0rd"
+          }
+        },
+        "xml": {
+          "name": "AuthData"
+        }
+      },
+      "UserPublicProfile": {
+        "type": "object",
+        "properties": {
+          "username": {
+            "type": "string",
+            "example": "amazinguser"
+          },
+          "nickname": {
+            "type": "string",
+            "example": "tiredcoder"
+          },
+          "bio": {
+            "type": "string",
+            "example": "Something about me"
+          },
+          "image": {
+            "type": "string",
+            "example": "http://ya.ru/avatar/1.jpg"
+          }
+        },
+        "xml": {
+          "name": "UserPublicProfile"
+        }
+      },
+      "UserProfile": {
+        "type": "object",
+        "properties": {
+          "username": {
+            "type": "string",
+            "example": "amazinguser"
+          },
+          "nickname": {
+            "type": "string",
+            "example": "tiredcoder"
+          },
+          "bio": {
+            "type": "string",
+            "example": "Something about me"
+          },
+          "image": {
+            "type": "string",
+            "example": "http://ya.ru/avatar/1.jpg"
+          },
+          "following": {
+            "type": "boolean",
+            "example": false
+          },
+          "followingTags": {
+            "type": "array",
+            "example": [],
+            "items": {}
+          }
+        },
+        "xml": {
+          "name": "UserProfile"
+        }
+      },
+      "InviteCode": {
+        "type": "string",
+        "example": "Opgb85A7uRjNp1fmGc53V",
+        "xml": {
+          "name": "InviteCode"
+        }
+      },
+      "ArticleData": {
+        "type": "object",
+        "properties": {
+          "title": {
+            "type": "string",
+            "example": "Тестовая запись"
+          },
+          "description": {
+            "type": "string",
+            "example": "О чем-то интересном"
+          },
+          "body": {
+            "type": "string",
+            "example": "А это текст статьи 2"
+          },
+          "tagList": {
+            "type": "array",
+            "example": [
+              "теги",
+              "никто",
+              "не",
+              "читает"
+            ],
+            "items": {
+              "type": "string"
+            }
+          },
+          "link": {
+            "type": "string",
+            "example": "https://static.tildacdn.com/tild3435-3464-4534-b032-633331373365/Main_3.jpg"
+          }
+        },
+        "xml": {
+          "name": "ArticleData"
+        }
+      },
+      "ArticleDataPopulated": {
+        "type": "object",
+        "properties": {
+          "_id": {
+            "type": "string",
+            "example": "62a82b84eea89a1d74c5cc21"
+          },
+          "title": {
+            "type": "string",
+            "example": "Вторая публикация"
+          },
+          "description": {
+            "type": "string",
+            "example": "Описание публикации"
+          },
+          "body": {
+            "type": "string",
+            "example": "Тело публикации"
+          },
+          "link": {
+            "type": "string",
+            "example": "https://static.tildacdn.com/tild3435-3464-4534-b032-633331373365/Main_3.jpg"
+          },
+          "favoritesCount": {
+            "type": "number",
+            "example": 2000
+          },
+          "comments": {
+            "type": "array",
+            "example": [],
+            "items": {}
+          },
+          "tagList": {
+            "type": "array",
+            "example": [
+              "публикация",
+              "первая_публикация"
+            ],
+            "items": {
+              "type": "string"
+            }
+          },
+          "state": {
+            "type": "string",
+            "example": "published"
+          },
+          "author": {
+            "xml": {
+              "name": "userpublicprofile"
+            },
+            "$ref": "#/components/schemas/UserPublicProfile"
+          },
+          "slug": {
+            "type": "string",
+            "example": "vtoraya-publikaciya-biyghs"
+          },
+          "createdAt": {
+            "type": "string",
+            "example": "2022-06-14T06:32:36.706Z"
+          },
+          "updatedAt": {
+            "type": "string",
+            "example": "2022-06-14T06:32:36.706Z"
+          }
+        },
+        "xml": {
+          "name": "ArticleDataPopulated"
+        }
+      },
+      "Comment": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "example": "62a3392219fbd7ec26ff90a4"
+          },
+          "body": {
+            "type": "string",
+            "example": "Тест сообщения"
+          },
+          "createdAt": {
+            "type": "string",
+            "example": "2022-06-10T12:29:22.830Z"
+          },
+          "state": {
+            "xml": {
+              "name": "publishstate"
+            },
+            "$ref": "#/components/schemas/PublishState"
+          },
+          "author": {
+            "xml": {
+              "name": "userprofile"
+            },
+            "$ref": "#/components/schemas/UserProfile"
+          }
+        },
+        "xml": {
+          "name": "Comment"
+        }
+      },
+      "Article": {
+        "type": "object",
+        "properties": {
+          "slug": {
+            "type": "string",
+            "example": "testovaya-zapis-szpp6o"
+          },
+          "title": {
+            "type": "string",
+            "example": "Тестовая запись"
+          },
+          "description": {
+            "type": "string",
+            "example": "О чем-то интересном"
+          },
+          "body": {
+            "type": "string",
+            "example": "А это текст статьи 2"
+          },
+          "state": {
+            "xml": {
+              "name": "publishstate"
+            },
+            "$ref": "#/components/schemas/PublishState"
+          },
+          "createdAt": {
+            "type": "string",
+            "example": "2022-06-07T00:20:09.388Z"
+          },
+          "updatedAt": {
+            "type": "string",
+            "example": "2022-06-13T12:49:06.305Z"
+          },
+          "tagList": {
+            "type": "array",
+            "example": [
+              "теги",
+              "никто",
+              "не",
+              "читает"
+            ],
+            "items": {
+              "type": "string"
+            }
+          },
+          "favorited": {
+            "type": "boolean",
+            "example": false
+          },
+          "favoritesCount": {
+            "type": "number",
+            "example": 5
+          },
+          "author": {
+            "xml": {
+              "name": "userprofile"
+            },
+            "$ref": "#/components/schemas/UserProfile"
+          }
+        },
+        "xml": {
+          "name": "Article"
+        }
+      },
+      "SignupRequest": {
+        "type": "object",
+        "properties": {
+          "user": {
+            "xml": {
+              "name": "userprofile"
+            },
+            "$ref": "#/components/schemas/UserProfile"
+          },
+          "invite": {
+            "xml": {
+              "name": "invitecode"
+            },
+            "$ref": "#/components/schemas/InviteCode"
+          }
+        },
+        "xml": {
+          "name": "SignupRequest"
+        }
+      },
+      "InviteNotFoundError": {
+        "type": "object",
+        "properties": {
+          "message": {
+            "type": "string",
+            "example": "Invite <invite_code> not found or used"
+          },
+          "method": {
+            "type": "string",
+            "example": "POST"
+          },
+          "url": {
+            "type": "string",
+            "example": "/api/v1/users"
+          },
+          "name": {
+            "type": "string",
+            "example": "NotFoundError"
+          },
+          "meta": {
+            "type": "object",
+            "properties": {}
+          },
+          "errors": {
+            "type": "object",
+            "properties": {}
+          }
+        },
+        "xml": {
+          "name": "InviteNotFoundError"
+        }
+      },
+      "InviteData": {
+        "type": "object",
+        "properties": {
+          "_id": {
+            "type": "string",
+            "example": "62a7c8055453aa4419c405aa"
+          },
+          "code": {
+            "type": "string",
+            "example": "Opgb85A7uRjNp1fmGc53V"
+          },
+          "used": {
+            "type": "boolean",
+            "example": false
+          },
+          "createdAt": {
+            "type": "string",
+            "example": "2022-06-13T23:28:05.403Z"
+          }
+        },
+        "xml": {
+          "name": "InviteData"
+        }
+      },
+      "UserRoles": {
+        "type": "string",
+        "enum": [
+          "user",
+          "admin"
+        ],
+        "xml": {
+          "name": "UserRoles"
+        }
+      },
+      "PublishState": {
+        "type": "string",
+        "enum": [
+          "published",
+          "pending",
+          "declined"
+        ],
+        "xml": {
+          "name": "PublishState"
+        }
+      }
+    },
+    "securitySchemes": {
+      "bearerAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT"
+      }
+    }
+  },
+  "security": [
+    {"bearerAuth": []}
+  ]
+}

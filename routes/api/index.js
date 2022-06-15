@@ -2,11 +2,13 @@ const router = require('express').Router();
 const { requireRole } = require('../../middlewares/index');
 const auth = require('../auth');
 
+router.use('/docs', require('./docs'));
 router.use('/', require('./users'));
 router.use('/profiles', require('./profiles'));
 router.use('/articles', require('./articles'));
 router.use('/admin', auth.required, requireRole('admin'), require('./admin'));
 router.use('/tags', require('./tags'));
+router.use('/upload', require('./upload'));
 
 router.use((err, req, res, next) => {
   if (err.name === 'ValidationError') {

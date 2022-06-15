@@ -6,7 +6,6 @@ require('./config/passport');
 const express = require('express');
 const session = require('express-session');
 const cors = require('cors');
-
 const mongoose = require('mongoose');
 const { notFoundEntrypoint, errorHandler } = require('./middlewares');
 const routes = require('./routes');
@@ -22,7 +21,6 @@ app.use(require('morgan')('dev'));
 
 app.use(express.urlencoded({ extended: false }));
 app.use(express.json());
-
 app.use(
   session({
     secret: 'kitchen',
@@ -35,7 +33,8 @@ app.use(
 mongoose.connect(DB_URL);
 mongoose.set('debug', !isProduction);
 
-app.use('/api', routes);
+app.use(routes);
+
 app.use(notFoundEntrypoint);
 app.use(errorHandler);
 

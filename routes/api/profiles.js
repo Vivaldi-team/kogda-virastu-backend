@@ -1,52 +1,72 @@
-var router = require('express').Router();
-var mongoose = require('mongoose');
-var User = mongoose.model('User');
-var auth = require('../auth');
+const router = require('express').Router();
+const mongoose = require('mongoose');
+const asyncHandler = require('express-async-handler');
+
+const User = mongoose.model('User');
+const { NotFoundError } = require('../../errors');
+const auth = require('../auth');
 
 // Preload user profile on routes with ':username'
-router.param('username', function(req, res, next, username){
-  User.findOne({username: username}).then(function(user){
-    if (!user) { return res.sendStatus(404); }
+router.param('username', asyncHandler(async (req, res, next, username) => {
+  const user = await User.findOne({ username });
+  if (!user) {
+    // TODO: Use orFail instead
+    return next(new NotFoundError(`Пользователь ${username} не найден`));
+  }
+  req.profile = user;
+  return next();
+}));
 
-    req.profile = user;
+router.get('/:username', auth.optional, (req, res, next) => {
+  // #swagger.tags = ["profiles"]
+  // #swagger.summary = 'Получить профиль пользователя'
+  /* #swagger.responses[200] = {
+    schema: {
+      user: [{$ref:"#/definitions/UserProfile"}],
+    }
+  } */
+  if (req.payload) {
+    User.findById(req.payload.id).then((user) => {
+      if (!user) { return res.json({ profile: req.profile.toProfileJSONFor(false) }); }
 
-    return next();
-  }).catch(next);
-});
-
-router.get('/:username', auth.optional, function(req, res, next){
-  if(req.payload){
-    User.findById(req.payload.id).then(function(user){
-      if(!user){ return res.json({profile: req.profile.toProfileJSONFor(false)}); }
-
-      return res.json({profile: req.profile.toProfileJSONFor(user)});
+      return res.json({ profile: req.profile.toProfileJSONFor(user) });
     });
   } else {
-    return res.json({profile: req.profile.toProfileJSONFor(false)});
+    return res.json({ profile: req.profile.toProfileJSONFor(false) });
   }
 });
 
-router.post('/:username/follow', auth.required, function(req, res, next){
-  var profileId = req.profile._id;
+router.post('/:username/follow', auth.required, (req, res, next) => {
+  // #swagger.tags = ["profiles"]
+  // #swagger.summary = 'Подписаться на пользователя'
+  /* #swagger.responses[200] = {
+    schema: {
+      user: [{$ref:"#/definitions/UserProfile"}],
+    }
+  } */
+  const profileId = req.profile._id;
 
-  User.findById(req.payload.id).then(function(user){
+  User.findById(req.payload.id).then((user) => {
     if (!user) { return res.sendStatus(401); }
 
-    return user.follow(profileId).then(function(){
-      return res.json({profile: req.profile.toProfileJSONFor(user)});
-    });
+    return user.follow(profileId).then(() => res.json({ profile: req.profile.toProfileJSONFor(user) }));
   }).catch(next);
 });
 
-router.delete('/:username/follow', auth.required, function(req, res, next){
-  var profileId = req.profile._id;
+router.delete('/:username/follow', auth.required, (req, res, next) => {
+  // #swagger.tags = ["profiles"]
+  // #swagger.summary = 'Отписаться от пользователя'
+  /* #swagger.responses[200] = {
+    schema: {
+      user: [{$ref:"#/definitions/UserProfile"}],
+    }
+  } */
+  const profileId = req.profile._id;
 
-  User.findById(req.payload.id).then(function(user){
+  User.findById(req.payload.id).then((user) => {
     if (!user) { return res.sendStatus(401); }
 
-    return user.unfollow(profileId).then(function(){
-      return res.json({profile: req.profile.toProfileJSONFor(user)});
-    });
+    return user.unfollow(profileId).then(() => res.json({ profile: req.profile.toProfileJSONFor(user) }));
   }).catch(next);
 });
 

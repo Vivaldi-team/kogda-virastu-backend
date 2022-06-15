@@ -6,7 +6,6 @@ const {
   REF,
   REPO,
   DEST_PATH,
-  SECRET
 } = process.env;
 
 module.exports = {
@@ -24,7 +23,7 @@ module.exports = {
       repo: REPO,
       path: DEST_PATH,
       'pre-deploy-local': `sh ./scripts/deployEnvs.sh ${DEST_PATH} ${SSH_USERNAME} ${SSH_HOST}`,
-      'post-deploy': 'docker compose up --build -d'
+      'post-deploy': 'docker compose up --build -d',
     },
   },
 };

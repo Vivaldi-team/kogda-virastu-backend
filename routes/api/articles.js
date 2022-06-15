@@ -1,5 +1,6 @@
 const router = require('express').Router();
 const mongoose = require('mongoose');
+const asyncHandler = require('express-async-handler');
 
 const Article = mongoose.model('Article');
 const Comment = mongoose.model('Comment');
@@ -37,6 +38,14 @@ router.param('comment', (req, res, next, id) => {
 });
 
 router.get('/', auth.optional, (req, res, next) => {
+  // #swagger.summary = 'Получить список статей'
+  // #swagger.tags = ["article"]
+  /* #swagger.responses[200] = {
+    schema: {
+        articles: [{$ref:"#/definitions/ArticleData"}],
+        articlesCount: 1
+    }
+  } */
   let query = {};
   let limit = 20;
   let offset = 0;
@@ -100,8 +109,16 @@ router.get('/', auth.optional, (req, res, next) => {
 });
 
 router.get('/feed', auth.required, (req, res, next) => {
-  const limit = 20;
-  const offset = 0;
+  // #swagger.summary = 'Получить фид публикаций'
+  // #swagger.tags = ["article"]
+  /* #swagger.responses[200] = {
+    schema: {
+        articles: [{$ref:"#/definitions/ArticleData"}],
+        articlesCount: 1
+    }
+  } */
+  let limit = 20;
+  let offset = 0;
 
   if (typeof req.query.limit !== 'undefined') {
     limit = req.query.limit;
@@ -115,7 +132,10 @@ router.get('/feed', auth.required, (req, res, next) => {
     if (!user) {
       return res.sendStatus(401);
     }
-    const _articles = await Article.find({ $or: [{ author: { $in: user.followingUsers } }, { tagList: { $in: user.followingTags } }] })
+    const publishedOrOwnFilter = { state: 'published' };
+    const query = { $or: [{ author: { $in: user.followingUsers } }, { tagList: { $in: user.followingTags } }] };
+
+    const _articles = await Article.find({ $and: [query, publishedOrOwnFilter] })
       .limit(Number(limit))
       .skip(Number(offset))
       .populate('author');
@@ -137,7 +157,41 @@ router.get('/feed', auth.required, (req, res, next) => {
   });
 });
 
+router.get('/top', asyncHandler(async (req, res, next) => {
+  // #swagger.tags = ["article"]
+  // #swagger.summary = 'Получить список самых популярных публикаций'
+  /* #swagger.responses[200] = {
+    schema: {
+        articles: [{$ref:"#/definitions/ArticleDataPopulated"}],
+        articlesCount: 1
+    }
+  } */
+  const TOP_COUNT_LIMIT = 20;
+  const articles = await Article.find({
+    state: 'published',
+  }).sort({ favoritesCount: -1 }).limit(TOP_COUNT_LIMIT).populate('author', {
+    username: 1, bio: 1, nickname: 1, image: 1,
+  });
+  return res.json({ articles, articlesCount: articles.length });
+}));
+
 router.post('/', auth.required, (req, res, next) => {
+  // #swagger.summary = 'Cоздать новую публикацию'
+  // #swagger.tags = ["article"]
+  /* #swagger.requestBody = {
+      required: true,
+      schema: {
+        type: "object",
+        properties: {
+          article: {$ref:"#/definitions/ArticleData"},
+        }
+      }
+    } */
+  /* #swagger.responses[200] = {
+    schema: {
+        article: {$ref:"#/definitions/Article"},
+    }
+  } */
   User.findById(req.payload.id)
     .then((user) => {
       if (!user) {
@@ -158,6 +212,13 @@ router.post('/', auth.required, (req, res, next) => {
 
 // return a article
 router.get('/:article', auth.optional, (req, res, next) => {
+  // #swagger.summary = 'Получить публикацию с указанным Id'
+  // #swagger.tags = ["article"]
+  /* #swagger.responses[200] = {
+    schema: {
+        article: {$ref:"#/definitions/Article"},
+    }
+  } */
   Promise.all([
     req.payload ? User.findById(req.payload.id) : null,
     req.article.populate('author'),
@@ -172,6 +233,22 @@ router.get('/:article', auth.optional, (req, res, next) => {
 
 // update article
 router.put('/:article', auth.required, (req, res, next) => {
+  // #swagger.summary = 'Обновить публикацию'
+  // #swagger.tags = ["article"]
+  /* #swagger.requestBody = {
+      required: true,
+      schema: {
+        type: "object",
+        properties: {
+          article: {$ref:"#/definitions/ArticleData"},
+        }
+      }
+  } */
+  /* #swagger.responses[200] = {
+    schema: {
+        article: {$ref:"#/definitions/Article"},
+    }
+  } */
   User.findById(req.payload.id).then((user) => {
     if (req.article.author._id.toString() === req.payload.id.toString()) {
       if (typeof req.body.article.title !== 'undefined') {
@@ -206,6 +283,9 @@ router.put('/:article', auth.required, (req, res, next) => {
 
 // delete article
 router.delete('/:article', auth.required, (req, res, next) => {
+  // #swagger.tags = ["article"]
+  // #swagger.summary = 'Удалить публикацию с указанным Id'
+
   User.findById(req.payload.id)
     .then((user) => {
       if (!user) {
@@ -222,6 +302,13 @@ router.delete('/:article', auth.required, (req, res, next) => {
 
 // Favorite an article
 router.post('/:article/favorite', auth.required, (req, res, next) => {
+  // #swagger.tags = ["article"]
+  // #swagger.summary = 'Добавить публикацию в избранное'
+  /* #swagger.responses[200] = {
+    schema: {
+        article: {$ref:"#/definitions/Article"},
+    }
+  } */
   const articleId = req.article._id;
 
   User.findById(req.payload.id)
@@ -237,6 +324,13 @@ router.post('/:article/favorite', auth.required, (req, res, next) => {
 
 // Unfavorite an article
 router.delete('/:article/favorite', auth.required, (req, res, next) => {
+  // #swagger.tags = ["article"]
+  // #swagger.summary = 'Удалить публикацию из избранного'
+  /* #swagger.responses[200] = {
+    schema: {
+        article: {$ref:"#/definitions/Article"},
+    }
+  } */
   const articleId = req.article._id;
 
   User.findById(req.payload.id)
@@ -251,28 +345,42 @@ router.delete('/:article/favorite', auth.required, (req, res, next) => {
 });
 
 // return an article's comments
-router.get('/:article/comments', auth.optional, (req, res, next) => {
-  Promise.resolve(req.payload ? User.findById(req.payload.id) : null)
-    .then((user) => req.article
-      .populate({
-        path: 'comments',
-        populate: {
-          path: 'author',
-        },
-        options: {
-          sort: {
-            createdAt: 'desc',
-          },
-        },
-      })
-      .then((article) => res.json({
-        comments: req.article.comments.map((comment) => comment.toJSONFor(user)),
-      })))
-    .catch(next);
+router.get('/:article/comments', auth.optional, async (req, res, next) => {
+  // #swagger.tags = ["article"]
+  // #swagger.summary = 'Получить комментарии статьи'
+  /* #swagger.responses[200] = {
+    schema: {
+        comments: [{$ref:"#/definitions/Comment"}],
+    }
+  } */
+  const user = req?.payload?.id ? await User.findById(req.payload.id) : null;
+  const comments = await Comment.find({
+    $and: [
+      { article: req.article._id },
+      { $or: [{ state: 'published' }, { author: user?._id }] }],
+  }, null, {
+    sort: {
+      createdAt: 'desc',
+    },
+  }).populate('author');
+  return res.json({
+    comments: comments.map((comment) => comment.toJSONFor(user)),
+  });
 });
 
 // create a new comment
 router.post('/:article/comments', auth.required, (req, res, next) => {
+  // #swagger.tags = ["article"]
+  // #swagger.summary = 'Добавить новый комментарий к статье'
+  /* #swagger.requestBody = {
+      required: true,
+      schema: {
+        type: "object",
+        properties: {
+          comment: {$ref:"#/definitions/Comment"},
+        }
+      }
+  } */
   User.findById(req.payload.id)
     .then((user) => {
       if (!user) {
@@ -298,6 +406,19 @@ router.delete(
   '/:article/comments/:comment',
   auth.required,
   (req, res, next) => {
+    // #swagger.tags = ["article"]
+    /* #swagger.parameters['article'] = {
+            in: 'path',
+            type: 'string',
+            required: true,
+            description: 'slug публикации' }
+    */
+    /* #swagger.parameters['comment'] = {
+            in: 'path',
+            type: 'string',
+            required: true,
+            description: 'id комментария' }
+    */
     if (req.comment.author.toString() === req.payload.id.toString()) {
       req.article.comments.remove(req.comment._id);
       req.article
