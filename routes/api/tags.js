@@ -68,7 +68,7 @@ router.get('/top', async (req, res, next) => {
   // #swagger.summary = 'Получить список самых популярных тегов'
   try {
     const tags = await Article.aggregate([
-      { $filter: { state: 'published' } },
+      { $match: { state: 'published' } },
       { $project: { tagList: 1 } },
       { $unwind: '$tagList' },
       { $group: { _id: '$tagList', count: { $sum: 1 } } },
