@@ -1556,13 +1556,7 @@
                 "type": "object",
                 "properties": {
                   "roles": {
-                    "type": "array",
-                    "items": {
-                      "xml": {
-                        "name": "userroles"
-                      },
-                      "$ref": "#/components/schemas/UserRoles"
-                    }
+                    "$ref": "#/components/schemas/UserRoles"
                   }
                 }
               }
@@ -1735,7 +1729,7 @@
         }
       }
     },
-    "/upload/image/{filename}": {
+    "/upload/images/{filename}": {
       "get": {
         "tags": [
           "upload"
