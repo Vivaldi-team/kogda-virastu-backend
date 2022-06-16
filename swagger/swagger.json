@@ -1485,6 +1485,102 @@
         }
       }
     },
+    "/admin/users": {
+      "get": {
+        "tags": [
+          "admin"
+        ],
+        "summary": "Получить список пользователей",
+        "description": "",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/admin/users/{username}": {
+      "get": {
+        "tags": [
+          "admin"
+        ],
+        "summary": "Получить информацию о пользователе",
+        "description": "",
+        "parameters": [
+          {
+            "name": "username",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "имя пользователя"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/admin/users/{username}/roles": {
+      "patch": {
+        "tags": [
+          "admin"
+        ],
+        "summary": "Обновить роли пользователя",
+        "description": "",
+        "parameters": [
+          {
+            "name": "username",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "имя пользователя"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "roles": {
+                    "type": "array",
+                    "items": {
+                      "xml": {
+                        "name": "userroles"
+                      },
+                      "$ref": "#/components/schemas/UserRoles"
+                    }
+                  }
+                }
+              }
+            },
+            "application/xml": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "roles": {
+                    "$ref": "#/components/schemas/UserRoles"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/tags/": {
       "get": {
         "tags": [

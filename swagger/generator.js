@@ -13,12 +13,6 @@ const UserData = {
   bio: 'Something about me',
   image: 'http://ya.ru/avatar/1.jpg',
 };
-const UserRoles = {
-  '@enum': [
-    'user',
-    'admin',
-  ],
-};
 
 const doc = {
   info: {
@@ -140,7 +134,12 @@ const doc = {
       used: false,
       createdAt: '2022-06-13T23:28:05.403Z',
     },
-    UserRoles,
+    UserRoles: {
+      '@enum': [
+        'user',
+        'admin',
+      ],
+    },
     PublishState: {
       '@enum': [
         'published',
