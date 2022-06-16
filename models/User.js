@@ -37,7 +37,7 @@ const UserSchema = new mongoose.Schema(
     },
     image: {
       type: String,
-      validate: { validator: (v) => isURL(v), message: 'must be valid url' },
+      validate: { validator: (v) => isURL(v, { require_tld: false }), message: 'must be valid url' },
     },
     favorites: [
       {

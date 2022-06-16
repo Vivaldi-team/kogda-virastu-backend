@@ -13,7 +13,7 @@ const ArticleSchema = new mongoose.Schema({
   body: String,
   link: {
     type: String,
-    validate: { validator: (v) => isURL(v), message: 'must be valid url' },
+    validate: { validator: (v) => isURL(v, { require_tld: false }), message: 'must be valid url' },
   },
   favoritesCount: { type: Number, default: 0 },
   comments: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Comment' }],
