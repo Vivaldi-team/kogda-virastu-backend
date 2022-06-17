@@ -38,7 +38,7 @@ router.post('/', auth.required, fileUploader, asyncHandler(async (req, res, next
 // #swagger.start
 /*
      #swagger.tags = ["upload"]
-     #swagger.path = '/upload/image/{filename}'
+     #swagger.path = '/upload/images/{filename}'
      #swagger.method = 'get'
      #swagger.description = 'Получение загруженного изображения'
      #swagger.produces = ['application/json']
